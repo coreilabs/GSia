@@ -1,0 +1,475 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><!-- is_embed=False -->
+
+
+
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, 
+	initial-scale=1.0, 
+	maximum-scale=1.0, 
+	user-scalable=no">
+	<title>Sued - by CoreiLabs</title>
+	<link rel="shortcut icon" href="favicon.png?v=2"/>
+
+<!-- 
+Desenvolvido por Marco Aurélio SIlva
+se for utilizar em algum projeto me avise -->
+
+
+
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=ox9XtB71"></script>
+
+
+<!-- Bootstrap -->
+<link href="bootstrap.min.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+
+
+
+
+
+      <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+      <script type="text/javascript">
+
+
+    //<![CDATA[
+    $(window).load(function(){
+      var i = 0;
+      var ligado = false;
+      var resp = "";
+      var qtVolta = 0;
+
+      function transformTypedCharacter(typedChar) {
+
+
+        if (typedChar === ";" && ligado === false) {
+          ligado = true;
+          typedChar = " ";
+
+        } else if (typedChar === ";" && ligado === true) {
+          i = 0;
+          ligado = false;
+          typedChar = " ";
+
+        } else if (ligado === false && typedChar != ";") {
+         if(typedChar === ";"){typedChar = " ";}
+         return typedChar;
+
+       }
+
+       if (ligado) {
+        var frase = " Querido Senhor Sued eu gostaria muito de saber";
+        i++;
+        if (i > 1) {
+          if(typedChar === ";"){typedChar = " ";}
+
+          resp += typedChar;
+        }
+
+
+
+
+        if (i >= frase.length) {
+          ligado = false;
+
+
+        }
+
+        return frase.charAt(i);
+
+
+
+      } else if (!ligado) {
+        resp.slice(1);
+        if(typedChar == ";"){
+         return " ";
+       }else {
+         eponto(typedChar);
+         return typedChar;
+       }
+
+     }
+   }
+
+   function insertTextAtCursor(text) {
+    var sel, range, textNode;
+    if (window.getSelection) {
+      sel = window.getSelection();
+      if (sel.getRangeAt && sel.rangeCount) {
+        range = sel.getRangeAt(0).cloneRange();
+        range.deleteContents();
+        textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+
+            // Move caret to the end of the newly inserted text node
+            range.setStart(textNode, textNode.length);
+            range.setEnd(textNode, textNode.length);
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        } else if (document.selection && document.selection.createRange) {
+          range = document.selection.createRange();
+          range.pasteHTML(text);
+        }
+      }
+
+
+      $("#editable").keypress(function (evt) {
+        if (evt.which) {
+          var charStr = String.fromCharCode(evt.which);
+
+          var transformedChar = transformTypedCharacter(charStr);
+          if (transformedChar != charStr) {
+
+            insertTextAtCursor(transformedChar);
+            return false;
+          }
+        }
+      });
+
+      $("#changeText").click(function () {
+       document.getElementById("editable").style.display = 'none';
+       document.getElementById("changeText").style.display = 'none';
+       document.getElementById("voltar").style.display = 'block';
+       document.getElementById("resultado").style.display = 'block';
+       document.getElementById("reseta").style.display = 'none';
+
+       if(resp){
+        
+        responsiveVoice.speak(resp, "Brazilian Portuguese Female");
+        $("#resultado").html(resp);
+      }else{
+     
+             responsiveVoice.speak("Você precisa saber perguntar", "Brazilian Portuguese Female");
+                $("#resultado").html("Você precisa saber perguntar");
+
+      }
+    });
+
+
+      $("#voltar").click(function () {
+       document.getElementById("editable").style.display = 'block';
+       document.getElementById("changeText").style.display = 'block';
+       document.getElementById("voltar").style.display = 'none';
+       document.getElementById("resultado").style.display = 'none';
+       document.getElementById("reseta").style.display = 'block';
+
+       i = 0;
+       ligado = false;
+       resp = "";
+       window.getSelection().removeAllRanges();
+       $("#editable").html("");
+
+
+
+
+     });
+
+
+
+      $("#reseta").click(function () {
+
+        i = 0;
+        ligado = false;
+        resp = "";
+        document.getElementById('editable').focus();
+        $("#editable").html("");
+
+
+
+      });
+
+
+
+
+      $("#editable").keyup(function (e) {
+        if (e.keyCode == 13) {
+         document.getElementById("editable").style.display = 'none';
+         document.getElementById("reseta").style.display = 'none';
+         document.getElementById("changeText").style.display = 'none';
+         document.getElementById("voltar").style.display = 'block';
+         document.getElementById("resultado").style.display = 'block';
+         document.getElementById('voltar').focus();
+         if(resp){
+          $("#resultado").html(resp);
+        }else{
+          responsiveVoice.speak("Você precisa perguntar com mais amor", "Brazilian Portuguese Female");
+          $("#resultado").html("Você precisa perguntar com mais amor");
+        }
+      }
+    });
+
+
+      var input = $('#editable');
+      input.on('keydown', function() {
+        var key = event.keyCode || event.charCode;
+
+        if( key == 8 || key == 46 )
+         resp.slice(0, - 1)
+     });
+
+
+
+      function eponto(value){
+       if(value===";"){
+        value= " ";
+        return value
+      }else{
+        return value;
+      }
+    }
+
+
+
+
+
+
+
+  });
+    //]]>
+
+      </script>
+
+      <style>
+
+      	html { 
+      		background: url(bg.webp) no-repeat center center fixed; 
+      		-webkit-background-size: cover;
+      		-moz-background-size: cover;
+      		-o-background-size: cover;
+      		background-size: cover;
+      	}
+
+      	.btn:focus,.btn:active {
+      		outline: none !important;
+      	}
+      	body {
+
+      		height: auto;
+      		/*		background:url(http://corei.com.br:7080/sued/bg.webp) no-repeat center top;*/
+      		/*  		overflow: hidden;*/
+      		font-family: Arial;
+      		background-color: transparent;
+      	}
+      	#logo{
+      		width:60px;
+      		position: absolute;
+      		bottom: 10px;
+      		right:10px;
+      	}
+
+
+      	#contador{
+      		bottom: 10px;
+      		left:10px;
+      		position: absolute;
+      	}
+
+      	#editable {
+      		outline:none;
+      		border: 1px solid red;
+      		height: 45px;
+      		font-size: 20px;
+      		background-color: black;
+      		width: 70%;
+      		margin: 25%  auto auto auto;
+      		line-height: 70%;
+      		overflow: hidden;
+      		color:red;
+      		padding: 13px 0 5px 10px;
+      	}
+      	#resultado {
+      		font-size:30px;
+      		color: red;
+      		margin: 0 auto ;
+      		height:120px;
+      		font-size:40px;
+      		text-shadow: 3px 3px 4px black;
+      		margin: 40%  auto auto auto;
+      		text-transform: uppercase;
+
+      		/* display: block;*/
+
+      	}
+
+.butanly {
+
+    color: white;
+    margin: 20px auto ;
+
+    background-color: green;
+    /*border: 1px solid red;*/
+    display: block;
+    cursor:pointer;
+}
+
+.butanly2 {
+
+    color: white;
+    margin: 20px auto ;
+
+    background-color: #FF0000;
+    /*border: 1px solid red;*/
+    display: block;
+    cursor:pointer;
+}
+        
+      	#voltar {
+      		display: none;
+      		color:#FFF;
+      		margin-top:30px;
+
+
+      	}
+
+      	.texto{
+
+
+      		text-align: center;
+      		color: white;
+      	}
+
+
+
+
+
+      </style>
+
+
+  </head>
+  <body>
+ 
+
+  	<div class="container">
+
+  		<div class="row">
+  			<div class="col-xs-12 col-sm-12 col-lg-12">
+  				<span id="titulo"><h2 class="texto" style="    text-shadow: 0px 0px 5px black;">PERGUNTE-ME QUALQUER COISA<br/>;;;</h2>	</span>
+
+  				<div id="editable" contenteditable="true" placeholder="digite aqui"></div></div>
+
+  			</div>
+
+
+
+  			<div class="row">
+
+  				<div class="col-xs-6 col-lg-6 ">
+
+  					<button tabindex="1" type="button" id="changeText" class="btn-lg btn-success  pull-right butanly">SABER A RESPOSTA</button>
+
+  				</div>
+
+  				<div class="col-xs-6 col-lg-6 ">
+
+  					<button tabindex="0" type="button" id="reseta" class="btn-lg btn-danger butanly2 pull-left">LIMPAR TUDO</button>
+
+  				</div>
+  			</div>
+
+
+
+  			<div class="row">
+
+  				<div class="col-xs-12 col-lg-12">      
+
+
+  					<div id="resultado" class="text-center">      </div>
+  					<button type="button" id="voltar" class="btn-lg btn-default butanly">VOLTAR</button>
+  					<div id="disqus_thread"></div>
+  					<script type="text/javascript">
+  						/* * * CONFIGURATION VARIABLES * * */
+  						var disqus_shortname = 'sued';
+
+  						/* * * DON'T EDIT BELOW THIS LINE * * */
+  						(function() {
+  							var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  							dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  							(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  						})();
+  					</script>
+  					<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  				</div> 
+  			</div>
+
+
+
+
+
+
+
+
+
+
+
+  			<div class="row" style="margin-bottom:0;">
+
+  				<div class="col-xs-12 col-lg-12 ">
+  					<div class="footer navbar-fixed-bottom">
+  						<a target="_BLANK" title="CoreiLabs - Marco Aurélio Silva" href="http://www.facebook.com/dedodeouro" alt="CoreiLabs - Marco Aurélio Silva" href="http://www.facebook.com/dedodeouro"><img id="logo" src="/web/20181230214050im_/http://corei.com.br:7080/sued/corelabs_logo.png" alt="by CoreiLabs - contato@corei.com.br"/></a>  
+  						<img id="contador" src="http://counter6.allfreecounter.com/private/webcontadores.php?c=edd136a29b8a81fb61a6275010dc0946" border="0" title="contador de visitas" alt="contador de visitas">
+  					</div>
+  				</div>
+  			</div>
+
+  		</div>
+
+
+
+
+
+
+
+
+
+  		<script>
+  			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  			})(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
+
+  			ga('create', 'UA-59204164-1', 'auto');
+  			ga('send', 'pageview');
+
+  		</script>
+
+
+  	</body>
+
+
+
+
+
+  	</html>
+    
+<!--
+     FILE ARCHIVED ON 21:40:50 Dec 30, 2018 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 17:15:05 Oct 28, 2024.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  captures_list: 4.104
+  exclusion.robots: 0.037
+  exclusion.robots.policy: 0.022
+  esindex: 0.015
+  cdx.remote: 5.046
+  LoadShardBlock: 94.239 (3)
+  PetaboxLoader3.datanode: 101.752 (5)
+  load_resource: 1065.583
+  PetaboxLoader3.resolve: 1017.23
+-->
